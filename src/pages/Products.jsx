@@ -1,20 +1,17 @@
-import { useState } from "react";
+// src/pages/Products.js
 import ProductList from "../components/Products/ProductList";
-import Sidebar from "../components/Sidebar"; // Adjust the import based on your folder structure
+import Sidebar from "../components/Sidebar";
+import { useBasket } from "../context/BasketContext";
 
 const Products = () => {
-  const [basket, setBasket] = useState([]);
-
-  const removeFromBasket = (id) => {
-    setBasket((prev) => prev.filter((item) => item.id !== id));
-  };
+  const { basketItems, addToBasket, removeFromBasket } = useBasket(); // Access basket functions
 
   return (
     <div className="mx-auto flex flex-row">
-      <div className="container mx-auto flex-1 p-4 ">
-        <ProductList setBasket={setBasket} />
+      <div className="container mx-auto flex-1 p-4">
+        <ProductList addToBasket={addToBasket} />
       </div>
-      <Sidebar basketItems={basket} removeFromBasket={removeFromBasket} />
+      <Sidebar basketItems={basketItems} removeFromBasket={removeFromBasket} />
     </div>
   );
 };
