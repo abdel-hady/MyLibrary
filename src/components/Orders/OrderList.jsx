@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllOrders, deleteOrder } from "../../api/OrderService";
+import { getAllOrders, deleteOrder } from "../../api/orderService";
 import OrderForm from "./OrderForm";
 
 const OrderList = () => {
