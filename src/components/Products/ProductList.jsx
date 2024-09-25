@@ -1,9 +1,10 @@
+// src/components/Products/ProductList.js
 import { useEffect, useState } from "react";
 import { getAllProducts, deleteProduct } from "../../api/productService";
 import ProductForm from "./ProductForm";
 import { BASE_URL } from "../../api/axiosInstance";
 
-const ProductList = ({ setBasket }) => {
+const ProductList = ({ addToBasket }) => {
   const [products, setProducts] = useState([]);
   const [userRole, setUserRole] = useState("");
 
@@ -21,19 +22,9 @@ const ProductList = ({ setBasket }) => {
     setProducts(products);
   };
 
-  const handleDelete = async (id) => {
-    await deleteProduct(id);
-    loadProducts();
-  };
-
-  const addToBasket = (product) => {
-    setBasket((prev) => [...prev, product]);
-  };
-
   return (
     <div>
       <h1 className="text-3xl font-bold mb-4">Products</h1>
-      {userRole === "admin" && <ProductForm onProductAdded={loadProducts} />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
           <div key={product.id} className="p-4 bg-white shadow-md rounded-lg">

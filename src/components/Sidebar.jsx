@@ -1,3 +1,4 @@
+// src/components/Sidebar.js
 import { Link } from "react-router-dom";
 
 const Sidebar = ({ basketItems, removeFromBasket }) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getAllOrders, deleteOrder } from "../../api/orderService";
 import OrderForm from "./OrderForm";
+import { deleteOrder, getAllOrders } from "../../api/orderService";
 
 const OrderList = () => {
 	const [orders, setOrders] = useState([]);
