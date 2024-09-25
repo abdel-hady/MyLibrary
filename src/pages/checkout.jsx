@@ -1,7 +1,7 @@
 // src/pages/Checkout.js
 import { useState } from "react";
 import { useBasket } from "../context/BasketContext"; // Use basket context
-import { addOrder } from "../api/OrderService"; // Import the addOrder API
+import { addOrder } from "../api/orderService";
 
 const Checkout = () => {
   const { basketItems } = useBasket();

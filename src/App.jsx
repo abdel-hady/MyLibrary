@@ -2,10 +2,10 @@
 import { Link, Route, BrowserRouter, Routes } from 'react-router-dom';
 import './App.css';
 import Products from './pages/Products';
-import Orders from './pages/Orders';
 import { BasketProvider } from './context/BasketContext'; // Import the BasketProvider
 import Checkout from './pages/checkout';
 import Login from './pages/Auth';
+import Orders from './pages/Orders';
 
 function App() {
   return (
