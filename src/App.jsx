@@ -5,6 +5,7 @@ import Products from './pages/Products';
 import Orders from './pages/Orders';
 import { BasketProvider } from './context/BasketContext'; // Import the BasketProvider
 import Checkout from './pages/checkout';
+import Login from './pages/Auth';
 
 function App() {
   return (
@@ -20,12 +21,16 @@ function App() {
                 <li>
                   <Link to="/orders" className="hover:underline">Orders</Link>
                 </li>
+                <li>
+                  <Link to="/login" className="hover:underline">Login</Link>
+                </li>
               </ul>
             </nav>
             <Routes>
               <Route path="/products" element={<Products />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </div>
         </div>

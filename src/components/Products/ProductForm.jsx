@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addProduct, updateProduct } from "../../api/ProductService";
+import { addProduct, updateProduct } from "../../api/productService";
 
 const ProductForm = ({ product, onProductAdded, onProductUpdated }) => {
 	const [name, setName] = useState(product ? product.name : "");

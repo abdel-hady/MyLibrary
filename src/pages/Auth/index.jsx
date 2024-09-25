@@ -1,7 +1,6 @@
-// src/pages/Login.js
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../api/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,26 +13,19 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', {
-        email,
-        password,
-      });
-      console.log(response.data)
-      localStorage.setItem('token', response.data.access_token);
-      localStorage.setItem('user-role', response.data.user.role);
-
+      const data = await loginUser(email, password);
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user-role', data.user.role);
       navigate('/products');
     } catch (err) {
+      console.error(err)
       setError('Invalid email or password');
     }
   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form
-        className="bg-white p-6 rounded shadow-md"
-        onSubmit={handleLogin}
-      >
+      <form className="bg-white p-6 rounded shadow-md" onSubmit={handleLogin}>
         <h2 className="text-xl mb-4">Login</h2>
         {error && <p className="text-red-500">{error}</p>}
         <div className="mb-4">

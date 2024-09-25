@@ -1,35 +1,29 @@
-// src/api/axiosInstance.js
 import axios from "axios";
 
-// Create an Axios instance
+export const BASE_URL = "http://localhost:3000";
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000", // Base URL for the API
+  baseURL: BASE_URL,
 });
 
-// Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Add any custom headers here, e.g., authorization
-    const token = localStorage.getItem("token"); // Replace with your token logic
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    // Handle request error
     return Promise.reject(error);
   }
 );
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    return response.data; // Return the data directly
+    return response.data;
   },
   (error) => {
-    // Handle errors globally
     console.error("API Error:", error.response ? error.response.data : error.message);
     return Promise.reject(error);
   }

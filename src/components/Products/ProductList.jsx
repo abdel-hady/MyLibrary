@@ -1,6 +1,8 @@
 // src/components/Products/ProductList.js
 import { useEffect, useState } from "react";
-import { getAllProducts, deleteProduct } from "../../api/ProductService";
+import { getAllProducts, deleteProduct } from "../../api/productService";
+import ProductForm from "./ProductForm";
+import { BASE_URL } from "../../api/axiosInstance";
 
 const ProductList = ({ addToBasket }) => {
   const [products, setProducts] = useState([]);
@@ -8,8 +10,11 @@ const ProductList = ({ addToBasket }) => {
 
   useEffect(() => {
     loadProducts();
+    const token = localStorage.getItem("token");
     const userRole = localStorage.getItem("user-role");
-    setUserRole(userRole || "");
+    if (token) {
+      setUserRole(userRole);
+    }
   }, []);
 
   const loadProducts = async () => {
@@ -24,20 +29,32 @@ const ProductList = ({ addToBasket }) => {
         {products.map((product) => (
           <div key={product.id} className="p-4 bg-white shadow-md rounded-lg">
             <img
-              src={`http://localhost:3000/${product.photo}`}
+              src={`${BASE_URL}/${product.photo}`}
               alt={product.name}
               className="w-full h-40 object-cover rounded-md"
             />
             <h2 className="text-xl font-bold mt-2">{product.name}</h2>
             <p className="text-gray-600">{product.description}</p>
-            {userRole !== "admin" && (
+            <div className="mt-4 flex justify-between">
+            {userRole === "admin" ? (
+              <>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md"
+                  onClick={() => handleDelete(product.id)}
+                >
+                  Delete
+                </button>
+                <ProductForm product={product} onProductUpdated={loadProducts} />
+              </>
+            ) : (
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md"
                 onClick={() => addToBasket(product)}
               >
                 Add to Basket
               </button>
             )}
+            </div>
           </div>
         ))}
       </div>
