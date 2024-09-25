@@ -6,7 +6,7 @@ import { BasketProvider } from './context/BasketContext'; // Import the BasketPr
 import Checkout from './pages/checkout';
 import Login from './pages/Auth';
 import Orders from './pages/Orders';
-
+import PrivateRoute from './components/PrivateRoutes'
 function App() {
   return (
     <BasketProvider>
@@ -28,7 +28,11 @@ function App() {
             </nav>
             <Routes>
               <Route path="/products" element={<Products />} />
-              <Route path="/orders" element={<Orders />} />
+              <Route path="/orders" element={
+                <PrivateRoute>
+                  <Orders />
+                </PrivateRoute>
+                } />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/login" element={<Login />} />
             </Routes>
