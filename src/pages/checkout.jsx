@@ -4,7 +4,7 @@ import { useBasket } from "../context/BasketContext"; // Use basket context
 import { addOrder } from "../api/orderService";
 
 const Checkout = () => {
-  const { basketItems } = useBasket();
+  const { basketItems, clearBasket } = useBasket();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -25,6 +25,7 @@ const Checkout = () => {
     try {
       const response = await addOrder(order);
       setOrderStatus("Order placed successfully!");
+      clearBasket(); 
       console.log("Order placed:", response.data);
     } catch (error) {
       setOrderStatus("Failed to place the order. Please try again.");
@@ -45,8 +46,6 @@ const Checkout = () => {
               <li key={item.id}>{item.name}</li>
             ))}
           </ul>
-
-          {/* Personal and Shipping Details */}
           <input
             type="text"
             value={name}

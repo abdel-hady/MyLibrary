@@ -1,33 +1,21 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../api/authService';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const { login, authError } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
-
-    try {
-      const data = await loginUser(email, password);
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('user-role', data.user.role);
-      navigate('/products');
-    } catch (err) {
-      console.error(err)
-      setError('Invalid email or password');
-    }
+    login(email, password);
   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <form className="bg-white p-6 rounded shadow-md" onSubmit={handleLogin}>
         <h2 className="text-xl mb-4">Login</h2>
-        {error && <p className="text-red-500">{error}</p>}
+        {authError && <p className="text-red-500">{authError}</p>}
         <div className="mb-4">
           <label className="block mb-2" htmlFor="email">Email</label>
           <input

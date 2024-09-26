@@ -1,20 +1,15 @@
-// src/components/Products/ProductList.js
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import { getAllProducts, deleteProduct } from "../../api/productService";
-import ProductForm from "./ProductForm";
 import { BASE_URL } from "../../api/axiosInstance";
+import { useAuth } from '../../context/AuthContext';
+import ProductForm from './ProductForm';
 
 const ProductList = ({ addToBasket }) => {
   const [products, setProducts] = useState([]);
-  const [userRole, setUserRole] = useState("");
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     loadProducts();
-    const token = localStorage.getItem("token");
-    const userRole = localStorage.getItem("user-role");
-    if (token) {
-      setUserRole(userRole);
-    }
   }, []);
 
   const loadProducts = async () => {
@@ -36,16 +31,17 @@ const ProductList = ({ addToBasket }) => {
             <h2 className="text-xl font-bold mt-2">{product.name}</h2>
             <p className="text-gray-600">{product.description}</p>
             <div className="mt-4 flex justify-between">
-            {userRole === "admin" ? (
-              <>
-                <button
+            {isAuthenticated? (
+              <div>
+                <ProductForm product={product} onProductUpdated={loadProducts} />
+                  <button
                   className="bg-red-500 text-white px-4 py-2 rounded-md"
-                  onClick={() => handleDelete(product.id)}
+                  onClick={() => deleteProduct(product.id)}
                 >
                   Delete
                 </button>
-                <ProductForm product={product} onProductUpdated={loadProducts} />
-              </>
+              </div>
+                
             ) : (
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-md"

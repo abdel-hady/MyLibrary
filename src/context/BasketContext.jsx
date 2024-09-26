@@ -1,13 +1,9 @@
-// src/context/BasketContext.js
 import { createContext, useContext, useState } from 'react';
 
-// Create the context
 const BasketContext = createContext();
 
-// Custom hook to use the basket context easily
 export const useBasket = () => useContext(BasketContext);
 
-// Provide the context to the entire app
 export const BasketProvider = ({ children }) => {
   const [basketItems, setBasketItems] = useState([]);
 
@@ -19,8 +15,12 @@ export const BasketProvider = ({ children }) => {
     setBasketItems((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const clearBasket = () => {
+    setBasketItems([]);
+  };
+
   return (
-    <BasketContext.Provider value={{ basketItems, addToBasket, removeFromBasket }}>
+    <BasketContext.Provider value={{ basketItems, addToBasket, removeFromBasket, clearBasket }}>
       {children}
     </BasketContext.Provider>
   );
