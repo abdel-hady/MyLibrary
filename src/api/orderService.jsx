@@ -1,11 +1,10 @@
-// src/api/orders.js
 import axiosInstance from "./axiosInstance";
 
-const API_URL = "/orders"; // Base URL is already set in axiosInstance
+const API_URL = "/orders";
 
 export const getAllOrders = async () => {
   const response = await axiosInstance.get(API_URL);
-  return response; // Response is already processed by the interceptor
+  return response;
 };
 
 export const addOrder = async (order) => {

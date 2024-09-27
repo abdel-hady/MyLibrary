@@ -1,6 +1,5 @@
-// src/pages/Checkout.js
 import { useState } from "react";
-import { useBasket } from "../context/BasketContext"; // Use basket context
+import { useBasket } from "../context/BasketContext";
 import { addOrder } from "../api/orderService";
 
 const Checkout = () => {
@@ -11,6 +10,7 @@ const Checkout = () => {
   const [street, setStreet] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [orderStatus, setOrderStatus] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,17 +19,26 @@ const Checkout = () => {
       productIds: basketItems.map((item) => item.id),
       shippingDetails: { street, cardNumber },
       personalDetails: { name, email, phone },
-      status: "pending",
+      isApproved: false,
     };
 
     try {
       const response = await addOrder(order);
       setOrderStatus("Order placed successfully!");
-      clearBasket(); 
-      console.log("Order placed:", response.data);
+      clearBasket();
+      setFormErrors({});
     } catch (error) {
-      setOrderStatus("Failed to place the order. Please try again.");
-      console.error("Error placing the order:", error);
+      if (error.response && error.response.data) {
+        const backendErrors = error.response.data.errors;
+        const formErrors = backendErrors.reduce((acc, curr) => {
+          acc[curr.field] = curr.errors;
+          return acc;
+        }, {});
+        setFormErrors(formErrors);
+      } else {
+        setOrderStatus("Failed to place the order. Please try again.");
+        console.error("Error placing the order:", error);
+      }
     }
   };
 
@@ -46,46 +55,81 @@ const Checkout = () => {
               <li key={item.id}>{item.name}</li>
             ))}
           </ul>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Customer Name"
-            className="border p-2 mb-2 w-full rounded-md"
-            required
-          />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Customer Email"
-            className="border p-2 mb-2 w-full rounded-md"
-            required
-          />
-          <input
-            type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Customer Phone"
-            className="border p-2 mb-2 w-full rounded-md"
-            required
-          />
-          <input
-            type="text"
-            value={street}
-            onChange={(e) => setStreet(e.target.value)}
-            placeholder="Shipping Address"
-            className="border p-2 mb-2 w-full rounded-md"
-            required
-          />
-          <input
-            type="text"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-            placeholder="Card Number"
-            className="border p-2 mb-2 w-full rounded-md"
-            required
-          />
+
+          <div className="mb-4">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Customer Name"
+              className="border p-2 mb-1 w-full rounded-md"
+            />
+            {formErrors['personalDetails.name'] && (
+              <ul className="text-red-600">
+                {formErrors['personalDetails.name'][0]}
+              </ul>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Customer Email"
+              className="border p-2 mb-1 w-full rounded-md"
+            />
+            {formErrors['personalDetails.email'] && (
+              <ul className="text-red-600">
+                {formErrors['personalDetails.email'][0]}
+              </ul>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Customer Phone"
+              className="border p-2 mb-1 w-full rounded-md"
+            />
+            {formErrors['personalDetails.phone'] && (
+              <ul className="text-red-600">
+                {formErrors['personalDetails.phone'][0]}
+              </ul>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="text"
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+              placeholder="Shipping Address"
+              className="border p-2 mb-1 w-full rounded-md"
+            />
+            {formErrors['shippingDetails.street'] && (
+              <ul className="text-red-600">
+                {formErrors['shippingDetails.street'][0]}
+              </ul>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="text"
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
+              placeholder="Card Number"
+              className="border p-2 mb-1 w-full rounded-md"
+            />
+            {formErrors['shippingDetails.cardNumber'] && (
+              <ul className="text-red-600">
+                {formErrors['shippingDetails.cardNumber'][0]}
+              </ul>
+            )}
+          </div>
 
           <button
             type="submit"
@@ -95,8 +139,6 @@ const Checkout = () => {
           </button>
         </form>
       )}
-      {/* Display order status */}
-      {orderStatus && <p className="mt-4">{orderStatus}</p>}
     </div>
   );
 };
